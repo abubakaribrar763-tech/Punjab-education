@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Education 1 to 10 - Final PECTAA 2026-27</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f2f7fd;color:#18304d}
+header{background:linear-gradient(115deg,#0d2c54,#155a9c);color:#fff;padding:16px}.brand{max-width:1100px;margin:auto;display:flex;gap:12px;align-items:center}.logo{background:#fff;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:32px}
+nav{background:#0c284a;padding:10px}nav div{max-width:1100px;margin:auto;display:flex;gap:12px}nav a{color:#fff;text-decoration:none;font-size:13px}
+main{max-width:1100px;margin:16px auto;padding:0 12px}.hero{background:linear-gradient(115deg,#d9f1ff,#fff,#dff8eb);border:1px solid #c8e5fa;border-radius:16px;padding:18px}.section{background:#fff;border:1px solid #d7e6f7;border-radius:15px;padding:14px;margin-top:14px}
+.classes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.classbtn{border:0;border-radius:10px;padding:13px;color:#fff;font-weight:bold;cursor:pointer}
+.c1{background:#e84c6a}.c2{background:#ef8524}.c3{background:#e8ad17}.c4{background:#2aa967}.c5{background:#0baaa5}.c6{background:#2699d2}.c7{background:#3176d5}.c8{background:#555dcc}.c9{background:#7543c9}.c10{background:#c72b8d}
+.layout{display:grid;grid-template-columns:240px 1fr;gap:14px}.subjectbtn{width:100%;padding:11px;margin-bottom:6px;text-align:left;background:#f3f8ff;border:1px solid #dceafa;border-radius:10px;font-weight:bold;color:#193b61;cursor:pointer}.subjectbtn.active{background:#d8ecff;border-color:#1674d1}
+.topic{border:1px solid #dbe8f6;border-radius:12px;margin-bottom:9px;overflow:hidden}.topicbtn{width:100%;padding:13px;border:0;background:#fbfdff;display:flex;justify-content:space-between;color:#134d84;font-weight:bold;cursor:pointer}.topicdetail{padding:12px;border-top:1px solid #dbe8f6;background:#fff}.topicdetail[hidden]{display:none}.links{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.linkbtn{display:block;text-align:center;padding:10px;border-radius:9px;text-decoration:none;font-weight:bold;font-size:13px}.yt{background:#e6f4ff;color:#075c9f}.book{background:#e6f8ee;color:#087844}.test{background:#f0eaff;color:#6038a2}input{width:100%;padding:11px;border:1px solid #cbdced;border-radius:10px;margin-bottom:11px}
+@media(max-width:650px){.classes{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.links{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">📚</div><div><h1 style="margin:0">Free <span style="color:#70e0a8">Education</span></h1><div style="font-size:13px">1 to 10 - PECTAA 2026-27 Final 🖤</div></div></div></header>
+<nav><div><a href="#">🏠 Home</a><a href="https://pectaa.edu.pk/books-and-publications/" target="_blank">📕 PECTAA Books</a></div></nav>
+<main>
+<div class="hero"><b>Flow: Class → Subject → Topic → YouTube / Book / Test</b><br>Class 9 Tarjuma: Maryam & Taha Added - Muzammil & Dahar Removed as per your voice</div>
+<div class="section"><h3>Select Class</h3><div class="classes" id="classGrid"></div></div>
+<div class="layout"><div class="section"><h3 id="subjectTitle">Subjects</h3><div id="subjectGrid"></div></div><div class="section"><h3 id="topicTitle">Topics</h3><input id="search" placeholder="🔎 Search topic..."><div id="topicList"></div></div></div>
+</main>
+<script>
+const booksURL='https://pectaa.edu.pk/books-and-publications/';
+const syllabus={
+1:{'English':['Unit 1: Alphabets A-Z','Unit 2: Phonic Sounds','Unit 3: My Family','Unit 4: My School'],'Urdu':['حروف تہجی','الف سے ے تک','میری کتاب'],'Mathematics':['Numbers 1-100','Addition','Subtraction','Shapes'],'General Knowledge':['My Family','My Body','Animals','Fruits'],'Islamiat':['Kalma Tayyaba','Duaen','Good Manners']},
+2:{'English':['Unit 1: Reading Comprehension','Unit 2: Grammar - Noun Verb','Unit 3: My Daily Routine','Unit 4: Story Writing'],'Urdu':['اسباق - حمد نعت','نظم - میرا وطن','کہانیاں','الفاظ متضاد'],'Mathematics':['Numbers 1-1000','Addition Subtraction','Multiplication Tables','Measurement'],'General Knowledge':['Community Helpers','Food and Health','Transport','Our Environment'],'Islamiat':['Ibadat','Seerat Stories','Duas and Kalmas']},
+3:{'English':['Unit 1: Comprehension Passages','Unit 2: Tenses','Unit 3: My Country','Unit 4: Letter Writing'],'Urdu':['نثر - سچائی','نظم - ہمدردی','مکالمہ','واحد جمع'],'Mathematics':['Place Value','Multiplication Division','Fractions','Time and Money'],'General Science':['Living and Non-Living','Parts of Plants','Human Body','Matter'],'Islamiat':['Tauheed','Risalat','Akhlaq']},
+4:{'English':['Unit 1: Comprehension','Unit 2: Grammar Tenses','Unit 3: Essay My Best Friend','Unit 4: Story Writing'],'Urdu':['نثر و نظم - حمد و نعت','سبق - خدمت خلق','گرامر - اسم فعل','محاورے'],'Mathematics':['Whole Numbers','Factors Multiples','Fractions Decimals','Geometry and Perimeter'],'General Science':['Classification of Living Things','Food and Health','Light and Sound','Air and Water'],'Islamiat':['Quran Majeed','Khatm e Nabuwat','Ibadat']},
+5:{'English':['Unit 1: Hazrat Muhammad SAW Honesty','Unit 2: Little Things','Unit 3: My Country My Pride','Unit 4: Kindness to Animals','Unit 5: Healthy Habits','Grammar: Tenses, Essay, Letter'],'Urdu':['حمد - نظم','نعت - نظم','قائد اعظم کی زندگی','محنت کی عظمت','میرا وطن','گرامر - واحد جمع، مذکر مونث','مضمون نویسی'],'Mathematics':['Unit 1: Whole Numbers','Unit 2: HCF LCM','Unit 3: Fractions','Unit 4: Decimals','Unit 5: Percentage','Unit 6: Geometry','Unit 7: Area and Perimeter','Unit 8: Data Handling'],'General Science':['Unit 1: Classification of Living Things','Unit 2: Microorganisms','Unit 3: Flowering Plants','Unit 4: Environment','Unit 5: Matter and Changes','Unit 6: Light and Sound','Unit 7: Electricity'],'Islamiat':['Unit 1: Quran o Hadith','Unit 2: Iman o Ibadat','Unit 3: Seerat e Tayyaba','Unit 4: Akhlaq o Adab']},
+6:{'English':['Unit 1: The Last Sermon','Unit 2: Patriotism (Poem)','Unit 3: Courtesy','Unit 4: Quaid e Azam Vision','Unit 5: Health is Wealth','Grammar: Direct Indirect, Essays'],'Urdu':['نعت - شاعر','حمد','قومی یکجہتی','صفائی نصف ایمان ہے','گرامر - تشبیہ استعارہ','خطوط'],'Mathematics':['Unit 1: Integers','Unit 2: Rational Numbers','Unit 3: Algebra - Expressions','Unit 4: Linear Equations','Unit 5: Ratio Proportion','Unit 6: Geometry - Angles','Unit 7: Area Volume','Unit 8: Statistics'],'General Science':['Unit 1: Cells and Tissues','Unit 2: Flowering Plants','Unit 3: Environment','Unit 4: Atoms and Molecules','Unit 5: Light','Unit 6: Heat','Unit 7: Electricity'],'Computer Science':['Unit 1: Introduction to Computer','Unit 2: Computer Hardware','Unit 3: Software','Unit 4: MS Word','Unit 5: Internet'],'Islamiat':['Unit 1: Khatm e Nabuwat','Unit 2: Hajj o Zakat','Unit 3: Seerat','Unit 4: Quran']},
+7:{'English':['Unit 1: The Holy Prophet SAW Kindness','Unit 2: The Daffodils (Poem)','Unit 3: Health and Fitness','Unit 4: Media Impact','Unit 5: Quaid Vision','Grammar: Active Passive, Essays'],'Urdu':['حمد باری تعالیٰ','نعت رسول مقبول','مہمان نوازی','اتحاد کی برکت','گرامر - محاورے ضرب الامثال','مضامین'],'Mathematics':['Unit 1: Rational Numbers','Unit 2: Exponents','Unit 3: Square Root','Unit 4: Algebra - Equations','Unit 5: Geometry - Triangle','Unit 6: Area Volume','Unit 7: Statistics','Unit 8: Banking'],'General Science':['Unit 1: Cell Structure','Unit 2: Human Systems','Unit 3: Reproduction in Plants','Unit 4: Environment and Pollution','Unit 5: Acids Bases','Unit 6: Force and Motion','Unit 7: Light and Sound'],'Computer Science':['Unit 1: Computer Systems','Unit 2: Operating System','Unit 3: Word Processing','Unit 4: Internet and Email','Unit 5: Programming Basics'],'Islamiat':['Unit 1: Quran Majeed - Surahs','Unit 2: Khatm e Nabuwat Detail','Unit 3: Hajj','Unit 4: Akhlaq']},
+8:{'English':['Unit 1: The Saviour of Humanity','Unit 2: Patriotism','Unit 3: Aim of Education','Unit 4: Little Things Count','Unit 5: Future Technology','Grammar: Tenses, Letters, Stories'],'Urdu':['حمد - اقبال','نعت','ختم نبوت ﷺ','علامہ اقبال','میرا پسندیدہ کھیل','گرامر - روزمرہ محاورہ','مضمون - سائنس کے کرشمے'],'Mathematics':['Unit 1: Rational Numbers','Unit 2: Exponents','Unit 3: Square and Cube Root','Unit 4: Algebra - Factorization','Unit 5: Linear Equations','Unit 6: Geometry - Quadrilaterals','Unit 7: Area and Volume','Unit 8: Statistics and Probability'],'General Science':['Unit 1: Cell - Structure and Functions','Unit 2: Biotechnology','Unit 3: Human Body Systems','Unit 4: Chemical Reactions','Unit 5: Force and Pressure','Unit 6: Light and Sound','Unit 7: Electricity'],'Computer Science':['Unit 1: Computer Hardware Components','Unit 2: Software Types','Unit 3: Number System','Unit 4: MS Office','Unit 5: Internet and Networking','Unit 6: Programming - QBASIC'],'Islamiat':['Unit 1: Quran - Selected Surahs','Unit 2: Khatm e Nabuwat','Unit 3: Hajj and its Importance','Unit 4: Islamic Values']},
+9:{
+'English':['Unit 1: The Saviour of Mankind','Unit 2: Patriotism','Unit 3: Daffodils','Unit 4: Hazrat Asma (RA)','Unit 5: Women Empowerment','Unit 6: The Value of Time','Unit 7: If (Poem)','Unit 8: Globalisation','Unit 9: Quality Education','Unit 10: Snow Leopard and Markhor','Unit 11: The Dear Departed'],
+'Urdu':['1- Hamd Pg2','2- Naat Pg7','3- Akhlaq Hasna Pg12','4- Apni Madad Aap Pg20','5- Kaleem Aur Marna Pg28','6- Nam Dev Mali Pg38','7- Aaram o Sukoon Pg46','8- Sukta Pg58','9- Ibtidai Hisab Pg70','10- Lory Me Manzar Pg78','11- Bheria Pg87','12- Mehnat Ki Barkat Pg95','13- Javed Ke Naam Pg103','14- Paigham Latif Pg107','15- Cricket Aur Mushaira Pg112','16- Faqirana Aaye Pg119','17- Sun To Sahi Pg123','18- Gham Hai Ya Khushi Pg128','19- Kash Tufan Pg132'],
+'Islamiat':['Chapter 1: Quran Majeed o Hadith e Nabwi (SAW)','Chapter 2: Emaniyat o Ibadat','Chapter 3: Seerat un Nabi (SAW)','Chapter 4: Akhlaq o Adab','Chapter 5: Husn e Mamlaat o Muashrat','Chapter 6: Hidayat Ke Sarchashme aur Mashaheer e Islam','Chapter 7: Islami Taleemat aur Asr Hazir Ke Taqaze'],
+'Tarjuma-tul-Quran':[
+'1- Tilawat Quran Majeed Ke Adab Pg1',
+'2- Umoomi Hidayat Baraye Asatza Pg2',
+'3- Seerat e Tameer Pg3',
+'4- Surah Maryam',
+'5- Surah Taha',
+'6- Surah Anbiya Pg48',
+'7- Surah Hajj Pg61',
+'8- Surah Furqan Pg73',
+'9- Surah Shuara Pg88',
+'10- Surah Namal Pg101',
+'11- Surah Qasas Pg116',
+'12- Surah Ankaboot',
+'13- Surah Room Pg127',
+'14- Surah Luqman Pg137',
+'15- Surah Sajda Pg145',
+'16- Surah Saba Pg152',
+'17- Surah Fatir Pg162',
+'18- Surah Yaseen Pg172',
+'19- Surah Saffat Pg181',
+'20- Surah Saad Pg193',
+'21- Surah Ahqaf Pg203',
+'22- Model Paper Pg214',
+'23- Ramooz o Auqaf Quran Majeed Pg216'
+],
+'Mathematics':['Ch1: Real Numbers','Ch2: Logarithms','Ch3: Set and Functions','Ch4: Factorization','Ch5: Linear Equations','Ch6: Trigonometry','Ch7: Coordinate Geometry','Ch8: Logic','Ch9: Similar Figures','Ch10: Graphs','Ch11: Loci','Ch12: Information Handling','Ch13: Probability'],
+'Physics':['Ch1: Physical Quantities Pg5','Ch2: Kinematics Pg28','Ch3: Dynamics Pg52','Ch4: Turning Effect Pg80','Ch5: Work Energy Pg105','Ch6: Mechanical Properties Pg127','Ch7: Thermal Properties Pg148','Ch8: Magnetism Pg161','Ch9: Nature of Science Pg181'],
+'Chemistry':['Ch1: States of Matter and Phase Changes','Ch2: Atomic Structure','Ch3: Chemical Bonding','Ch4: Stoichiometry','Ch5: Energetics','Ch6: Equilibria','Ch7: Acid Base Chemistry','Ch8: Periodic Table and Periodicity','Ch9: Group Properties and Elements','Ch10: Environmental Chemistry','Ch11: Hydrocarbons','Ch12: Empirical Data Collection and Analysis','Ch13: Laboratory and Practical Skills'],
+'Biology':['Ch1: The Science of Biology','Ch2: Biodiversity','Ch3: The Cell','Ch4: Cell Cycle','Ch5: Tissues Organs','Ch6: Biomolecules','Ch7: Enzymes','Ch8: Bioenergetics','Ch9: Plant Physiology','Ch10: Reproduction in Plants','Ch11: Biostatistics'],
+'Computer Science':['Ch1: Computational Systems Pg1','Ch2: System Design Pg25','Ch3: Networks Pg47','Ch4: Computational Thinking Pg68','Ch5: Web Dev HTML CSS JS Pg91','Ch6: Data Science Pg111','Ch7: Emerging Tech Pg121','Ch8: Ethical Concerns Pg141','Ch9: Entrepreneurship']
+},
+10:{
+'English':['Unit 1: Hazrat Muhammad SAW Social Reforms','Unit 2: My Beloved Pakistan','Unit 3: Digital Globalisation','Unit 4: The Earth','Unit 5: The Happy Prince','Unit 6: Drug Abuse','Unit 7: Time (Poem)','Unit 8: Pollution-Free Pakistan','Unit 9: The Road Not Taken','Unit 10: The Three Questions'],
+'Urdu':['1- Hamd Pg2','2- Naat Pg7','3- Akhlaq e Nabwi Pg12','4- Sir Syed Ka Bachpan Pg19','5- Muhsin Mohalla Pg28','6- Gafqara Pg35','7- Saveray Jo Kal Ankh Meri Khuli Pg48','8- Dosti Ka Phal Pg57','9- Mera Gaon Pg66','10- Babul Ke Khandar Pg74','11- Olda Taj Home Pg83','12- Kuch Zariye Taleem Ke Bab Me Pg101','13- Admi Nama Pg108','14- Nasooh Pg114','15- Khitab Ba Jawanan e Islam Pg120','16- Waghera Pg126','17- Bazicha e Atfal Hai Dunya Pg131','18- Etrash Ko Zara Na Hota Pg136','19- Hai Mashq e Sukhan Jari Pg141','20- Yun Kehne Ko Pg146'],
+'Pakistan Studies':['Ch1: Pakistan Ki Nazriyati Asas Pg1','Ch2: Tehreek e Pakistan Pg12','Ch3: Pakistan Ki Tareekh Pg26','Ch4: Pakistan Ka Jughrafiya Pg62','Ch5: Pakistan Aur Bain ul Aqwami Umoor Pg84','Ch6: Pakistan Ke Wasail Pg98','Ch7: Abadi Muashra Pg108','Ch8: Khawateen Ko Ba-Ikhtiyar Banana Pg134'],
+'Chemistry':['Ch14: States of Matter Pg1','Ch15: Stoichiometry Pg16','Ch16: Electrochemistry Pg31','Ch17: Reaction Kinetics Pg55','Ch18: Salts Pg67','Ch19: Nitrogen and Sulphur Pg74','Ch20: Water Pg87','Ch21: Organic Chemistry Pg99','Ch22: Hydrocarbons Pg116','Ch23: Alcohols Pg126','Ch24: Carboxylic Acids Pg134','Ch25: Biochemistry Pg142','Ch26: Polymers Pg153'],
+'Biology':['Ch1: Human Digestive System Pg1','Ch2: Human Respiratory System Pg12','Ch3: Human Blood Circulatory System Pg24','Ch4: Human Urinary System Pg38','Ch5: Coordination Pg48','Ch6: Reproduction Pg64','Ch7: Inheritance Pg73','Ch8: Biotechnology Pg86','Ch9: Diseases and Immunity Pg96','Ch10: Evolution Pg106'],
+'Tarjuma-tul-Quran':['1- Tilawat Quran Majeed Ke Adab Pg1','2- Umoomi Hidayat Pg2','3- Hasalat e Talum Pg4','4- Surah Al-Anaam Pg5','5- Surah Al-Aaraf Pg32','6- Surah Younus Pg61','7- Surah Hood Pg78','8- Surah Raad Pg96','9- Surah Ibrahim Pg106','10- Surah Hijr Pg116','11- Surah Nahal Pg125','12- Surah Bani Israel Pg143','13- Surah Kahf Pg159','14- Surah Mominoon Pg175','15- Surah Zumar Pg187','16- Surah Momin Pg200','17- Surah Sajda Pg212','18- Surah Shura Pg222','19- Model Paper Pg232','20- Ramooz Auqaf Pg235','21- Certificate Pg236'],
+'Physics':['Ch10: Thermal Physics','Ch11: Transfer of Thermal Energy','Ch12: Waves','Ch13: Sound','Ch14: Light','Ch15: Electrostatics','Ch16: Electricity','Ch17: Electromagnetism','Ch18: EM Induction','Ch19: Electronics','Ch20: Atomic and Nuclear Physics','Ch21: Space and Environment'],
+'Mathematics':['Ch1: Complex Numbers','Ch2: Quadratic Equations','Ch3: Matrices','Ch4: Functions and Graphs','Ch5: Algebraic Fractions','Ch6: Vectors','Ch7: Trigonometry','Ch8: Chords and Arcs','Ch9: Tangent and Angles','Ch10: Practical Geometry','Ch11: Information Handling','Ch12: Probability'],
+'Computer Science':['Ch1: Operating Systems Pg1','Ch2: System Recovery Pg20','Ch3: Python Programming Pg40','Ch4: Control Structures Pg55','Ch5: Data Science Pg69','Ch6: AI and ML Pg88','Ch7: Applications of AI Pg101','Ch8: Digital Entrepreneurship Pg115']
+}
+};
+let activeClass=null,activeSubject=null,allTopics=[];
+const classGrid=document.getElementById('classGrid'),subjectGrid=document.getElementById('subjectGrid'),topicList=document.getElementById('topicList');
+function renderClasses(){classGrid.innerHTML='';for(let i=1;i<=10;i++){let b=document.createElement('button');b.className='classbtn c'+i;b.textContent='Class '+i;b.onclick=()=>selectClass(i);classGrid.appendChild(b);}}
+function selectClass(c){activeClass=c;activeSubject=null;renderClasses();document.getElementById('subjectTitle').textContent='Class '+c+' Subjects';subjectGrid.innerHTML='';Object.keys(syllabus[c]||{}).forEach(s=>{let b=document.createElement('button');b.className='subjectbtn';b.textContent=s;b.onclick=()=>selectSubject(s);subjectGrid.appendChild(b);});topicList.innerHTML='<div style="padding:14px;color:#667">Subject select karein</div>';}
+function selectSubject(sub){activeSubject=sub;document.getElementById('topicTitle').textContent=sub+' - Class '+activeClass;allTopics=syllabus[activeClass][sub]||[];renderTopics(allTopics);document.querySelectorAll('.subjectbtn').forEach(x=>x.classList.toggle('active',x.textContent===sub));}
+function renderTopics(list){topicList.innerHTML='';list.forEach((t,i)=>{let div=document.createElement('div');div.className='topic';let btn=document.createElement('button');btn.className='topicbtn';btn.innerHTML='<span>'+(i+1)+'. '+t+'</span><span>▼</span>';let det=document.createElement('div');det.className='topicdetail';det.hidden=true;let yt='https://www.youtube.com/results?search_query='+encodeURIComponent(t+' '+activeSubject+' Class '+activeClass);det.innerHTML='<p style="margin:0 0 10px;color:#5a6f85;font-size:13px">'+t+'</p><div class="links"><a class="linkbtn yt" href="'+yt+'" target="_blank">▶️ YouTube</a><a class="linkbtn book" href="'+booksURL+'" target="_blank">📕 Book</a><a class="linkbtn test" href="#" onclick="alert(\'Test coming soon\');return false;">📝 Test</a></div>';btn.onclick=()=>{det.hidden=!det.hidden;};div.appendChild(btn);div.appendChild(det);topicList.appendChild(div);});}
+document.getElementById('search').addEventListener('input',()=>{let q=document.getElementById('search').value.toLowerCase();renderTopics(allTopics.filter(t=>t.toLowerCase().includes(q)));});
+renderClasses();
+</script>
+</body>
+</html>
